@@ -82,6 +82,12 @@ arcs(dag2) <- arc.set
 ### code chunk number 12: chapter1.rnw:208-209
 ###################################################
 all.equal(dag, dag2)
+modelstring(dag2)
+print(dag2)
+
+# install.packages("BiocManager")
+# BiocManager::install("Rgraphviz")
+graphviz.plot(dag)
 
 
 ###################################################
@@ -152,6 +158,7 @@ dag3 <- model2network("[A][S][E|A:S][O|E][R|E][T|O:R]")
 ### code chunk number 20: chapter1.rnw:345-346
 ###################################################
 all.equal(dag, dag3)
+graphviz.plot(dag3)
 
 
 ###################################################
@@ -396,11 +403,14 @@ dsep(dag, x = "A", y = "S", z = "E")
 ### code chunk number 58: chapter1.rnw:1012-1013
 ###################################################
 library(gRain)
+BiocManager::install(c("graph", "RBGL", "Rgraphviz"))
 
 
 ###################################################
 ### code chunk number 59: chapter1.rnw:1019-1020
 ###################################################
+graphviz.plot(bn)
+print(bn)
 junction <- compile(as.grain(bn))
 
 
@@ -421,29 +431,39 @@ querygrain(jsex, nodes = "T")$T
 ###################################################
 ### code chunk number 62: chapter1.rnw:1064-1066
 ###################################################
+# probability of Travel (T) Given the Size of the City of Residence (R) is Small
+querygrain(junction, nodes = "T")$T  # overall probablity of Travel Type
 jres <- setEvidence(junction, nodes = "R", states = "small")
-querygrain(jres, nodes = "T")$T
-
+querygrain(jres, nodes = "T")$T  # P(T | R = small)
+querygrain(jres, nodes = "T", type='conditional')  # same
 
 ###################################################
 ### code chunk number 63: chapter1.rnw:1085-1089
 ###################################################
+# gives (marginal) P(Sex) and (separatly) P(Travel)
+querygrain(junction, nodes = c("S", "T"),
+           type = "marginal")
+# gives joint distribution of Sex & Travel i.e. P(Sex & Travel)
+prob_s_t <- querygrain(junction, nodes = c("S", "T"),
+                       type = "joint")
+prob_s_t
+# gives joint distribution of Sex & Travel given highschool education i.e. P([S, T] | E = high)
 jedu <- setEvidence(junction, nodes = "E", states = "high")
-SxT.cpt <- querygrain(jedu, nodes = c("S", "T"),
-             type = "joint")
-SxT.cpt
-
+querygrain(jedu, nodes = c("S", "T"),
+           type = "joint")
 
 ###################################################
 ### code chunk number 64: chapter1.rnw:1094-1095
 ###################################################
-querygrain(jedu, nodes = c("S", "T"), type = "marginal")
+querygrain(jedu, nodes = c("S", "T"),
+           type = "marginal")
 
 
 ###################################################
 ### code chunk number 65: chapter1.rnw:1102-1103
 ###################################################
-querygrain(jedu, nodes = c("S", "T"), type = "conditional")
+querygrain(jedu, nodes = c("S", "T"),
+           type = "conditional")
 
 
 ###################################################
