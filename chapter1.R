@@ -403,7 +403,7 @@ dsep(dag, x = "A", y = "S", z = "E")
 ### code chunk number 58: chapter1.rnw:1012-1013
 ###################################################
 library(gRain)
-BiocManager::install(c("graph", "RBGL", "Rgraphviz"))
+#BiocManager::install(c("graph", "RBGL", "Rgraphviz"))
 
 
 ###################################################
@@ -572,9 +572,9 @@ pp <- graphviz.plot(dag, highlight = hlight)
 ###################################################
 ### code chunk number 82: chapter1.rnw:1332-1335
 ###################################################
-edgeRenderInfo(pp) <- 
-  list(col = c("S~E" = "black", "E~R" = "black"),
-       lwd = c("S~E" = 3, "E~R" = 3))
+library(graph)
+edgeRenderInfo(pp) <- list(col = c("S~E" = "black", "E~R" = "black"),
+                           lwd = c("S~E" = 3, "E~R" = 3))
 
 
 ###################################################
@@ -589,6 +589,7 @@ nodeRenderInfo(pp) <-
 ###################################################
 ### code chunk number 84: chapter1.rnw:1355-1356
 ###################################################
+library(Rgraphviz)
 renderGraph(pp)
 
 
@@ -622,6 +623,7 @@ head(distr)
 ###################################################
 ### code chunk number 88: chapter1.rnw:1437-1448
 ###################################################
+library(lattice)
 barchart(Travel ~ Prob | Evidence, data = distr,
    layout = c(3, 1), xlab = "probability",
    scales = list(alternating = 1, tck = c(1, 0)),
